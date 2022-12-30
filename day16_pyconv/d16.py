@@ -18,7 +18,7 @@ class Node:
 def read_input():
     nodes = []
 
-    with open(r"day16.txt") as f:
+    with open(r"day16_sample.txt") as f:
         for l in f.read().splitlines():
             nodes.append(Node(re.findall(r"[A-Z][A-Z]|\d+", l)))
 
@@ -40,18 +40,21 @@ def read_input():
 
     return {node.name: node for node in nodes}  # if node.name == starting_node  # or node.flow}
 
-
 def traverse(node_map, current_node, visited=[], time=0, max_time=30):
+
     if time >= max_time:
         return 0  # , visited
 
     node = node_map[current_node]
     score = node.flow * (max_time - time)
+    print(f'node:{node.name} rate:{node.flow} time:{time} max_time:{max_time} score: {score}')
+
+
     new_visited = visited + [current_node]
     child_scores = max(([traverse(node_map, neighbor, new_visited, time + node.neighbor_map[neighbor] + 1, max_time)
                          for neighbor in node.neighbor_map if neighbor not in visited]) or [0])
-
-    # print('curr:{} score:{} time:{}'.format(node.name, score + child_scores, time))
+    print(child_scores)
+    print('curr:{} score:{} total_score:{} time:{}'.format(node.name, score, score + child_scores, time))
     return score + child_scores  # , [current_node] + child_scores[1])
 
 
@@ -68,7 +71,7 @@ def part1():
 #     for node in node_map.values():
 #         for p in path[1:]:
 #             if p in node.neighbor_map:
-#                 del node.neighbor_map[p]
+#                 del node.neighbor_map[p]q
 #
 #     elephant_score, _ = traverse(node_map, starting_node, max_time=26)
 #     return elephant_score + score
@@ -76,7 +79,7 @@ def part1():
 
 starting_node = 'AA'
 node_map = read_input()
-# print(node_map)
+print(node_map)
 start = time_ns()
 print(f"Part 1: {part1()} in {(time_ns() - start) / 1e6}ms")
 # start = time_ns()
